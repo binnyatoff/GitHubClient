@@ -1,4 +1,4 @@
-package ru.binnyatoff.githubclient.screens.feed
+package ru.binnyatoff.githubclient.screens.followers
 
 import android.os.Bundle
 import android.util.Log
@@ -14,12 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.retrofit.User
 import android.widget.SearchView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.binnyatoff.githubclient.R
+import ru.binnyatoff.githubclient.screens.feed.UsersAdapter
+import ru.binnyatoff.githubclient.screens.feed.clickDelegate
 
 @AndroidEntryPoint
-class Users : Fragment(R.layout.fragment_users) {
-    private val usersViewModel: UsersViewModel by viewModels()
+class Followers : Fragment(R.layout.fragment_users) {
+    private val followersViewModel: FollowersViewModel by viewModels()
     private val adapter = UsersAdapter()
 
     override fun onCreateView(
@@ -36,42 +37,36 @@ class Users : Fragment(R.layout.fragment_users) {
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerview)
         val progressCircular: ProgressBar = view.findViewById(R.id.progress_circular)
-        val swiper: SwipeRefreshLayout = view.findViewById(R.id.swiper)
-
-        swiper.setOnRefreshListener {
-            usersViewModel.refreshUsers()
-        }
-
-        observers(progressCircular, adapter, swiper)
+        observers(progressCircular, adapter)
         recyclerView(recyclerView, adapter)
+        val user:String = arguments?.get("user").toString()
+        followersViewModel.getFollowers(user)
     }
 
     private fun recyclerView(recyclerView: RecyclerView, adapter: UsersAdapter) {
         adapter.attachDelegate(object : clickDelegate {
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser)
-                findNavController().navigate(R.id.action_Users_to_UserDetail, bundle)
+                findNavController().navigate(R.id.action_Followers_to_UserDetail, bundle)
             }
         })
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
-    private fun observers(progressCircular: ProgressBar, adapter: UsersAdapter, swiper: SwipeRefreshLayout) {
-        usersViewModel.userList.observe(viewLifecycleOwner) {
+    private fun observers(progressCircular: ProgressBar, adapter: UsersAdapter) {
+        followersViewModel.userList.observe(viewLifecycleOwner) {
             adapter.setData(it)
-            swiper.isRefreshing = false
         }
 
-        usersViewModel.errorMessage.observe(viewLifecycleOwner) {
+        followersViewModel.errorMessage.observe(viewLifecycleOwner) {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
 
-        usersViewModel.loading.observe(viewLifecycleOwner) {
+        followersViewModel.loading.observe(viewLifecycleOwner) {
             if (it) {
                 progressCircular.visibility = View.VISIBLE
             } else {
-                swiper.isRefreshing = it
                 progressCircular.visibility = View.GONE
             }
         }

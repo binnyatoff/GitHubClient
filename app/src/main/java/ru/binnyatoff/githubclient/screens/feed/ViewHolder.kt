@@ -27,7 +27,7 @@ class ViewHolder(itemView: View, private val delegate: clickDelegate?) :
         }
     }
 
-    fun getImage(url: String) {
+    private fun getImage(url: String) {
         Glide
             .with(context)
             .load(url)

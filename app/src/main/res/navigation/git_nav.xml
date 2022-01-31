@@ -20,5 +20,17 @@
         android:name="ru.binnyatoff.githubclient.screens.UserDetails"
         android:label="fragment_user"
         tools:layout="@layout/fragment_user_details">
+        <action
+            android:id="@+id/action_UserDetail_to_Followers"
+            app:destination="@id/Followers" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/Followers"
+        android:name="ru.binnyatoff.githubclient.screens.followers.Followers"
+        android:label="Followers">
+        <action
+            android:id="@+id/action_Followers_to_UserDetail"
+            app:destination="@id/UserDetail" />
     </fragment>
 </navigation>

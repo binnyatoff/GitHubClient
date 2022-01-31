@@ -7,5 +7,5 @@ import kotlinx.android.parcel.Parcelize
 data class User(
     val login:String,
     val id: Int,
-    val avatar_url:String
+    val avatar_url:String,
 ):Parcelable

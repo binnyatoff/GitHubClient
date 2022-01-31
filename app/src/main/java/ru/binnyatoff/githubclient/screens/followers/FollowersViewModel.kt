@@ -1,4 +1,4 @@
-package ru.binnyatoff.githubclient.screens.feed
+package ru.binnyatoff.githubclient.screens.followers
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,26 +10,19 @@ import ru.binnyatoff.githubclient.retrofit.Api
 import ru.binnyatoff.githubclient.retrofit.User
 import javax.inject.Inject
 
-interface refresh{
-    fun refreshUsers()
-}
 
 @HiltViewModel
-class UsersViewModel @Inject constructor(private val api: Api) : ViewModel(),refresh {
+class FollowersViewModel @Inject constructor(private val api: Api) : ViewModel() {
 
     val errorMessage = MutableLiveData<String>()
     var loading = MutableLiveData<Boolean>()
     var userList = MutableLiveData<List<User>>()
 
-    init {
-        getAllUsers()
-    }
-
-    private fun getAllUsers() {
+    fun getFollowers(user: String) {
         loading.postValue(true)
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = api.listUser()
+                val response = api.followers(user)
                 if (response.isSuccessful) {
                     userList.postValue(response.body())
                     loading.postValue(false)
@@ -39,10 +32,6 @@ class UsersViewModel @Inject constructor(private val api: Api) : ViewModel(),ref
                 errorMessage.postValue(e.toString())
                 }
         }
-    }
-
-    override fun refreshUsers() {
-        getAllUsers()
     }
 }
 
