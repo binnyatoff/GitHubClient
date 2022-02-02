@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import ru.binnyatoff.githubclient.retrofit.User
+import ru.binnyatoff.githubclient.models.User
 import android.widget.SearchView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.binnyatoff.githubclient.R
@@ -49,6 +49,7 @@ class Users : Fragment(R.layout.fragment_users) {
     private fun recyclerView(recyclerView: RecyclerView, adapter: UsersAdapter) {
         adapter.attachDelegate(object : clickDelegate {
             override fun onClick(currentUser: User) {
+               // val followers = usersViewModel.getFollowers(currentUser.login)
                 val bundle = bundleOf("currentUser" to currentUser)
                 findNavController().navigate(R.id.action_Users_to_UserDetail, bundle)
             }

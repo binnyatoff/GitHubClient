@@ -1,4 +1,4 @@
-package ru.binnyatoff.githubclient.retrofit
+package ru.binnyatoff.githubclient.models
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

@@ -1,5 +1,6 @@
-package ru.binnyatoff.githubclient.screens.feed
+package ru.binnyatoff.githubclient.screens.details
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -7,42 +8,31 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.binnyatoff.githubclient.retrofit.Api
-import ru.binnyatoff.githubclient.models.User
+import ru.binnyatoff.githubclient.models.User_Details
 import javax.inject.Inject
 
-interface refresh{
-    fun refreshUsers()
-}
-
 @HiltViewModel
-class UsersViewModel @Inject constructor(private val api: Api) : ViewModel(),refresh {
+class UserDetailsViewModel @Inject constructor(private val api: Api): ViewModel() {
 
     val errorMessage = MutableLiveData<String>()
     var loading = MutableLiveData<Boolean>()
-    var userList = MutableLiveData<List<User>>()
+    var userDetails = MutableLiveData<User_Details>()
 
-    init {
-        getAllUsers()
-    }
-
-    private fun getAllUsers() {
+    fun getUserDeatails(user: String) {
         loading.postValue(true)
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = api.listUser()
+                val response = api.user_details(user)
                 if (response.isSuccessful) {
-                    userList.postValue(response.body())
+                    userDetails.postValue(response.body())
+                    Log.e("TAG", response.body().toString())
                     loading.postValue(false)
                 }
             } catch (e: Exception) {
                 loading.postValue(false)
+                Log.e("TAG", e.toString())
                 errorMessage.postValue(e.toString())
-                }
+            }
         }
     }
-    override fun refreshUsers() {
-        getAllUsers()
-    }
 }
-
-

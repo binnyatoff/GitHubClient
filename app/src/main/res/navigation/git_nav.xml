@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/UserDetail"
-        android:name="ru.binnyatoff.githubclient.screens.UserDetails"
+        android:name="ru.binnyatoff.githubclient.screens.details.UserDetails"
         android:label="fragment_user"
         tools:layout="@layout/fragment_user_details">
         <action

@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import ru.binnyatoff.githubclient.retrofit.User
+import ru.binnyatoff.githubclient.models.User
 import android.widget.SearchView
 import ru.binnyatoff.githubclient.R
 import ru.binnyatoff.githubclient.screens.feed.UsersAdapter

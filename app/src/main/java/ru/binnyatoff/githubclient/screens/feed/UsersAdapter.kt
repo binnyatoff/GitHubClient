@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
-import ru.binnyatoff.githubclient.retrofit.User
+import ru.binnyatoff.githubclient.models.User
 import ru.binnyatoff.githubclient.R
 import java.util.*
 import kotlin.collections.ArrayList

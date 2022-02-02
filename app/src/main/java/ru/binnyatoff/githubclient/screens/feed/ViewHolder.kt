@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.binnyatoff.githubclient.R
-import ru.binnyatoff.githubclient.retrofit.User
+import ru.binnyatoff.githubclient.models.User
 
 class ViewHolder(itemView: View, private val delegate: clickDelegate?) :
     RecyclerView.ViewHolder(itemView) {

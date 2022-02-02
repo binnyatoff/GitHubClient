@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.binnyatoff.githubclient.retrofit.Api
-import ru.binnyatoff.githubclient.retrofit.User
+import ru.binnyatoff.githubclient.models.User
 import javax.inject.Inject
 
 
