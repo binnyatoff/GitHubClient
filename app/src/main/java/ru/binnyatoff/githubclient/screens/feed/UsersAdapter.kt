@@ -42,7 +42,7 @@ class UsersAdapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
     @SuppressLint("NotifyDataSetChanged")
     fun setData(user: List<User>) {
         usersList = user
-        usersFilterList = usersList
+       // usersFilterList = usersList
         notifyDataSetChanged()
     }
 

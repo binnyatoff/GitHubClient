@@ -49,7 +49,6 @@ class Users : Fragment(R.layout.fragment_users) {
     private fun recyclerView(recyclerView: RecyclerView, adapter: UsersAdapter) {
         adapter.attachDelegate(object : clickDelegate {
             override fun onClick(currentUser: User) {
-               // val followers = usersViewModel.getFollowers(currentUser.login)
                 val bundle = bundleOf("currentUser" to currentUser)
                 findNavController().navigate(R.id.action_Users_to_UserDetail, bundle)
             }
@@ -58,9 +57,18 @@ class Users : Fragment(R.layout.fragment_users) {
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
-    private fun observers(progressCircular: ProgressBar, adapter: UsersAdapter, swiper: SwipeRefreshLayout) {
+    private fun observers(
+        progressCircular: ProgressBar,
+        adapter: UsersAdapter,
+        swiper: SwipeRefreshLayout
+    ) {
         usersViewModel.userList.observe(viewLifecycleOwner) {
             adapter.setData(it)
+            swiper.isRefreshing = false
+        }
+
+        usersViewModel.testuserList.observe(viewLifecycleOwner) {
+            adapter.setData(it.items)
             swiper.isRefreshing = false
         }
 
@@ -87,14 +95,19 @@ class Users : Fragment(R.layout.fragment_users) {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                adapter.filter.filter(query)
+                //adapter.filter.filter(query)
+                usersViewModel.search(query)
                 Log.e("TAG", query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                adapter.filter.filter(newText)
-                Log.e("TAG", newText)
+                return true
+            }
+        })
+        searchView.setOnCloseListener(object : SearchView.OnCloseListener {
+            override fun onClose(): Boolean {
+                usersViewModel.getAllUsers()
                 return true
             }
         })

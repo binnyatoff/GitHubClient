@@ -20,27 +20,37 @@ class UserDetails : Fragment(R.layout.fragment_user_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val currentUser = arguments?.getParcelable<User>("currentUser")
+        currentUser?.login?.let { userDetailsViewModel.getUserDeatails(it)}
+
         val login: TextView = view.findViewById(R.id.user_login)
         val avatar: ImageView = view.findViewById(R.id.avatar)
         val followers: CardView = view.findViewById(R.id.card_followers)
         val followers_amount: TextView = view.findViewById(R.id.followers_amount)
-        val currentUser = arguments?.getParcelable<User>("currentUser")
+        val location: TextView = view.findViewById(R.id.location)
+        val user_name: TextView = view.findViewById(R.id.user_name)
 
-        Glide.with(view)
-            .load(currentUser?.avatar_url)
-            .circleCrop()
-            .into(avatar)
-
-        currentUser?.login?.let { userDetailsViewModel.getUserDeatails(it)}
 
         val bundle = bundleOf("user" to currentUser?.login)
-        login.text = currentUser?.login
         followers.setOnClickListener {
             findNavController().navigate(R.id.action_UserDetail_to_Followers, bundle)
         }
 
         userDetailsViewModel.userDetails.observe(viewLifecycleOwner) {
             followers_amount.text = it.followers.toString()
+            location.text = it.location
+            user_name.text = it.name
+            login.text = it.login
+            getAvatar(view, it.avatar_url, avatar)
         }
+    }
+
+    fun getAvatar(view: View, avatar_url: String, avatar: ImageView)
+    {
+        Glide.with(view)
+            .load(avatar_url)
+            .circleCrop()
+            .into(avatar)
     }
 }
