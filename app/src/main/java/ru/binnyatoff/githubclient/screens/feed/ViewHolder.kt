@@ -13,14 +13,12 @@ class ViewHolder(itemView: View, private val delegate: clickDelegate?) :
     RecyclerView.ViewHolder(itemView) {
 
     var login: TextView = itemView.findViewById(R.id.login)
-    var id: TextView = itemView.findViewById(R.id.id)
     var avatar: ImageView = itemView.findViewById(R.id.avatar)
     var context: Context = itemView.context
 
     fun bind(currentUser: User) {
         val url: String = currentUser.avatar_url
         login.text = currentUser.login
-        id.text = currentUser.id.toString()
         getImage(url)
         itemView.setOnClickListener {
             delegate?.onClick(currentUser)

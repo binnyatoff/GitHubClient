@@ -36,6 +36,7 @@ class UsersViewModel @Inject constructor(private val api: Api) : ViewModel(),ref
                 if (response.isSuccessful) {
                     userList.postValue(response.body())
                     loading.postValue(false)
+                    Log.e("TAG", "${response.body()}")
                 }
             } catch (e: Exception) {
                 loading.postValue(false)

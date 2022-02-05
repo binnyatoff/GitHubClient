@@ -42,7 +42,7 @@ class UsersAdapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
     @SuppressLint("NotifyDataSetChanged")
     fun setData(user: List<User>) {
         usersList = user
-       // usersFilterList = usersList
+       usersFilterList = usersList
         notifyDataSetChanged()
     }
 
@@ -70,7 +70,7 @@ class UsersAdapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
 
             @SuppressLint("NotifyDataSetChanged")
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                usersFilterList = results?.values as ArrayList<User>
+                usersFilterList = results?.values as List<User>
                 notifyDataSetChanged()
             }
         }

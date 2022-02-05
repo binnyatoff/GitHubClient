@@ -27,7 +27,7 @@ class Users : Fragment(R.layout.fragment_users) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(true) //меню
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -36,7 +36,8 @@ class Users : Fragment(R.layout.fragment_users) {
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerview)
         val progressCircular: ProgressBar = view.findViewById(R.id.progress_circular)
-        val swiper: SwipeRefreshLayout = view.findViewById(R.id.swiper)
+
+        val swiper: SwipeRefreshLayout = view.findViewById(R.id.swiper)//swipe to refresh
 
         swiper.setOnRefreshListener {
             usersViewModel.refreshUsers()
@@ -47,7 +48,7 @@ class Users : Fragment(R.layout.fragment_users) {
     }
 
     private fun recyclerView(recyclerView: RecyclerView, adapter: UsersAdapter) {
-        adapter.attachDelegate(object : clickDelegate {
+        adapter.attachDelegate(object : clickDelegate{
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser)
                 findNavController().navigate(R.id.action_Users_to_UserDetail, bundle)

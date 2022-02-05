@@ -37,9 +37,9 @@ class Followers : Fragment(R.layout.fragment_users) {
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerview)
         val progressCircular: ProgressBar = view.findViewById(R.id.progress_circular)
+        val user:String = arguments?.get("user").toString()
         observers(progressCircular, adapter)
         recyclerView(recyclerView, adapter)
-        val user:String = arguments?.get("user").toString()
         followersViewModel.getFollowers(user)
     }
 
@@ -82,13 +82,11 @@ class Followers : Fragment(R.layout.fragment_users) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 adapter.filter.filter(query)
-                Log.e("TAG", query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
                 adapter.filter.filter(newText)
-                Log.e("TAG", newText)
                 return true
             }
         })
