@@ -3,5 +3,6 @@
     <string name="search">Search</string>
     <string name="followers">Followers</string>
     <string name="login">Login</string>
-    <string name="fale">Что-то сломалось 乁( . ര ʖ̯ ര . )ㄏ Загружаю с БД</string>
+    <string name="name">Name</string>
+    <string name="fale">Что-то сломалось 乁( . ര ʖ̯ ര . )ㄏ\n Загружаю с БД</string>
 </resources>

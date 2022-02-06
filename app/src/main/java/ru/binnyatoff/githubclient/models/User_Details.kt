@@ -9,5 +9,5 @@ data class User_Details(
     val followers: Int,
     val location: String,
     val login: String,
-    val name: String
+    var name: String
 ): Parcelable

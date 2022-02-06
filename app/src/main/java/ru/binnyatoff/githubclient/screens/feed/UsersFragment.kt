@@ -1,7 +1,9 @@
 package ru.binnyatoff.githubclient.screens.feed
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -19,7 +21,7 @@ import ru.binnyatoff.githubclient.screens.feed.adapter.UsersAdapter
 import ru.binnyatoff.githubclient.screens.feed.adapter.ClickDelegate
 
 @AndroidEntryPoint
-class Users : Fragment(R.layout.fragment_users) {
+class UsersFragment : Fragment(R.layout.fragment_users) {
     private val usersViewModel: UsersViewModel by viewModels()
     private val adapter = UsersAdapter()
 
@@ -29,12 +31,13 @@ class Users : Fragment(R.layout.fragment_users) {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerview)
         val progressCircular: ProgressBar = view.findViewById(R.id.progress_circular)
         val swiper: SwipeRefreshLayout = view.findViewById(R.id.swiper)//swipe to refresh
+        val ufo: LinearLayout = view.findViewById(R.id.ufo)
 
         swiper.setOnRefreshListener {
             usersViewModel.refreshUsers()
         }
 
-        observers(progressCircular, adapter, swiper)
+        observers(progressCircular, swiper, ufo)
         recyclerView(recyclerView)
     }
 
@@ -42,7 +45,7 @@ class Users : Fragment(R.layout.fragment_users) {
         adapter.attachDelegate(object : ClickDelegate {
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser)
-                findNavController().navigate(R.id.action_Users_to_UserDetail, bundle)
+                findNavController().navigate(R.id.action_UsersFragment_to_UserDetailFragment, bundle)
             }
         })
         recyclerView.adapter = adapter
@@ -51,8 +54,8 @@ class Users : Fragment(R.layout.fragment_users) {
 
     private fun observers(
         progressCircular: ProgressBar,
-        adapter: UsersAdapter,
-        swiper: SwipeRefreshLayout
+        swiper: SwipeRefreshLayout,
+        ufo: LinearLayout
     ) {
         usersViewModel.userList.observe(viewLifecycleOwner) {
             adapter.setData(it)
@@ -62,6 +65,9 @@ class Users : Fragment(R.layout.fragment_users) {
         usersViewModel.searchList.observe(viewLifecycleOwner) {
             adapter.setData(it.items)
             swiper.isRefreshing = false
+            if (it.items.isEmpty()){
+                ufo.visibility = View.VISIBLE
+            }
         }
 
         usersViewModel.errorMessage.observe(viewLifecycleOwner) {
@@ -69,9 +75,7 @@ class Users : Fragment(R.layout.fragment_users) {
         }
 
         usersViewModel.loading.observe(viewLifecycleOwner) {
-            if (it) {
-                progressCircular.visibility = View.VISIBLE
-            } else {
+            if (!it) {
                 swiper.isRefreshing = it
                 progressCircular.visibility = View.GONE
             }
@@ -92,6 +96,8 @@ class Users : Fragment(R.layout.fragment_users) {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
+                //usersViewModel.search(newText)// отключено что-б не получить бан за кучу запросов на сервер
+                //надо написать отдельную вьюху для поиска по гиту, а эту оставить для поиска по тому, что загружено
                 return true
             }
         })

@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserDetailsViewModel @Inject constructor(private val api: Api): ViewModel() {
 
-    val errorMessage = MutableLiveData<String>()
+    val errorMessage = MutableLiveData<Boolean>()
     var loading = MutableLiveData<Boolean>()
     var userDetails = MutableLiveData<User_Details>()
 
@@ -31,7 +31,7 @@ class UserDetailsViewModel @Inject constructor(private val api: Api): ViewModel(
             } catch (e: Exception) {
                 loading.postValue(false)
                 Log.e("TAG", e.toString())
-                errorMessage.postValue(e.toString())
+                errorMessage.postValue(true)
             }
         }
     }

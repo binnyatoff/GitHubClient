@@ -34,7 +34,8 @@ class UsersViewModel @Inject constructor(private val api: Api, private val dao: 
                     loading.postValue(false)
                     errorMessage.postValue(false)
                     response.body()?.let {
-                        addToDatabase(it) }
+                        addToDatabase(it)
+                    }
                 }
             } catch (e: Exception) {
                 loading.postValue(false)
@@ -56,20 +57,20 @@ class UsersViewModel @Inject constructor(private val api: Api, private val dao: 
         }
     }
 
+    fun refreshUsers() {
+        getAllUsers()
+    }
+
     private fun addToDatabase(user: List<User>) {
         CoroutineScope(Dispatchers.IO).launch {
             dao.addUser(user)
         }
     }
 
-    private fun getInDatabase(){
+    private fun getInDatabase() {
         CoroutineScope(Dispatchers.IO).launch {
             userList.postValue(dao.readAllData())
         }
-    }
-
-    fun refreshUsers() {
-        getAllUsers()
     }
 }
 
