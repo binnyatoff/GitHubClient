@@ -14,8 +14,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.models.User
 import android.widget.SearchView
 import ru.binnyatoff.githubclient.R
-import ru.binnyatoff.githubclient.screens.feed.UsersAdapter
-import ru.binnyatoff.githubclient.screens.feed.clickDelegate
+import ru.binnyatoff.githubclient.screens.feed.adapter.UsersAdapter
+import ru.binnyatoff.githubclient.screens.feed.adapter.ClickDelegate
 
 @AndroidEntryPoint
 class Followers : Fragment(R.layout.fragment_users) {
@@ -34,7 +34,7 @@ class Followers : Fragment(R.layout.fragment_users) {
     }
 
     private fun recyclerView(recyclerView: RecyclerView) {
-        adapter.attachDelegate(object : clickDelegate {
+        adapter.attachDelegate(object : ClickDelegate {
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser)
                 findNavController().navigate(R.id.action_Followers_to_UserDetail, bundle)

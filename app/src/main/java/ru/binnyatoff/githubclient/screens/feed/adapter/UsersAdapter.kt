@@ -1,4 +1,4 @@
-package ru.binnyatoff.githubclient.screens.feed
+package ru.binnyatoff.githubclient.screens.feed.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -11,17 +11,13 @@ import ru.binnyatoff.githubclient.R
 import java.util.*
 import kotlin.collections.ArrayList
 
-interface clickDelegate {
-    fun onClick(currentUser: User)
-}
-
 class UsersAdapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
 
     private var usersList = emptyList<User>()
     private var usersFilterList = emptyList<User>()
-    private var delegate: clickDelegate? = null
+    private var delegate: ClickDelegate? = null
 
-    fun attachDelegate(delegate: clickDelegate) {
+    fun attachDelegate(delegate: ClickDelegate) {
         this.delegate = delegate
     }
 

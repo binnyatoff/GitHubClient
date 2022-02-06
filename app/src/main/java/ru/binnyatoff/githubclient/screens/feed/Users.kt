@@ -1,7 +1,6 @@
 package ru.binnyatoff.githubclient.screens.feed
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.ProgressBar
@@ -16,6 +15,8 @@ import ru.binnyatoff.githubclient.models.User
 import android.widget.SearchView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.binnyatoff.githubclient.R
+import ru.binnyatoff.githubclient.screens.feed.adapter.UsersAdapter
+import ru.binnyatoff.githubclient.screens.feed.adapter.ClickDelegate
 
 @AndroidEntryPoint
 class Users : Fragment(R.layout.fragment_users) {
@@ -38,7 +39,7 @@ class Users : Fragment(R.layout.fragment_users) {
     }
 
     private fun recyclerView(recyclerView: RecyclerView) {
-        adapter.attachDelegate(object : clickDelegate {
+        adapter.attachDelegate(object : ClickDelegate {
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser)
                 findNavController().navigate(R.id.action_Users_to_UserDetail, bundle)
@@ -64,7 +65,7 @@ class Users : Fragment(R.layout.fragment_users) {
         }
 
         usersViewModel.errorMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            if (it) Toast.makeText(context, R.string.fale, Toast.LENGTH_SHORT).show()
         }
 
         usersViewModel.loading.observe(viewLifecycleOwner) {
@@ -87,7 +88,6 @@ class Users : Fragment(R.layout.fragment_users) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 usersViewModel.search(query)
-                Log.e("TAG", query)
                 return true
             }
 
