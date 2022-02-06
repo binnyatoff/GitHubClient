@@ -12,17 +12,13 @@ import ru.binnyatoff.githubclient.retrofit.Api
 import ru.binnyatoff.githubclient.models.User
 import javax.inject.Inject
 
-interface refresh{
-    fun refreshUsers()
-}
-
 @HiltViewModel
-class UsersViewModel @Inject constructor(private val api: Api) : ViewModel(),refresh {
+class UsersViewModel @Inject constructor(private val api: Api) : ViewModel() {
 
     val errorMessage = MutableLiveData<String>()
     var loading = MutableLiveData<Boolean>()
     var userList = MutableLiveData<List<User>>()
-    var testuserList = MutableLiveData<Search>()
+    var searchList = MutableLiveData<Search>()
 
     init {
         getAllUsers()
@@ -41,25 +37,26 @@ class UsersViewModel @Inject constructor(private val api: Api) : ViewModel(),ref
             } catch (e: Exception) {
                 loading.postValue(false)
                 errorMessage.postValue(e.toString())
-                }
+            }
         }
     }
 
-    fun search(query: String){
+    fun search(query: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 Log.e("TAG", "Loading")
                 val response = api.search(query)
-                if (response.isSuccessful){
-                    testuserList.postValue(response.body())
+                if (response.isSuccessful) {
+                    searchList.postValue(response.body())
                     Log.e("TAG", "${response.body()}")
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e("TAG", "Error $e")
             }
         }
     }
-    override fun refreshUsers() {
+
+    fun refreshUsers() {
         getAllUsers()
     }
 }

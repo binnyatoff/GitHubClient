@@ -1,7 +1,6 @@
 package ru.binnyatoff.githubclient.screens.followers
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.ProgressBar
@@ -23,27 +22,18 @@ class Followers : Fragment(R.layout.fragment_users) {
     private val followersViewModel: FollowersViewModel by viewModels()
     private val adapter = UsersAdapter()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        setHasOptionsMenu(true)
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setHasOptionsMenu(true)
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerview)
         val progressCircular: ProgressBar = view.findViewById(R.id.progress_circular)
         val user:String = arguments?.get("user").toString()
         observers(progressCircular, adapter)
-        recyclerView(recyclerView, adapter)
+        recyclerView(recyclerView)
         followersViewModel.getFollowers(user)
     }
 
-    private fun recyclerView(recyclerView: RecyclerView, adapter: UsersAdapter) {
+    private fun recyclerView(recyclerView: RecyclerView) {
         adapter.attachDelegate(object : clickDelegate {
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser)

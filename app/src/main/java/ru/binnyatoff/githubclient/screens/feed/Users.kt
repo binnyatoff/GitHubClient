@@ -22,21 +22,11 @@ class Users : Fragment(R.layout.fragment_users) {
     private val usersViewModel: UsersViewModel by viewModels()
     private val adapter = UsersAdapter()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        setHasOptionsMenu(true) //меню
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setHasOptionsMenu(true) //меню
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerview)
         val progressCircular: ProgressBar = view.findViewById(R.id.progress_circular)
-
         val swiper: SwipeRefreshLayout = view.findViewById(R.id.swiper)//swipe to refresh
 
         swiper.setOnRefreshListener {
@@ -44,11 +34,11 @@ class Users : Fragment(R.layout.fragment_users) {
         }
 
         observers(progressCircular, adapter, swiper)
-        recyclerView(recyclerView, adapter)
+        recyclerView(recyclerView)
     }
 
-    private fun recyclerView(recyclerView: RecyclerView, adapter: UsersAdapter) {
-        adapter.attachDelegate(object : clickDelegate{
+    private fun recyclerView(recyclerView: RecyclerView) {
+        adapter.attachDelegate(object : clickDelegate {
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser)
                 findNavController().navigate(R.id.action_Users_to_UserDetail, bundle)
@@ -68,7 +58,7 @@ class Users : Fragment(R.layout.fragment_users) {
             swiper.isRefreshing = false
         }
 
-        usersViewModel.testuserList.observe(viewLifecycleOwner) {
+        usersViewModel.searchList.observe(viewLifecycleOwner) {
             adapter.setData(it.items)
             swiper.isRefreshing = false
         }
@@ -96,7 +86,6 @@ class Users : Fragment(R.layout.fragment_users) {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                //adapter.filter.filter(query)
                 usersViewModel.search(query)
                 Log.e("TAG", query)
                 return true
@@ -106,11 +95,9 @@ class Users : Fragment(R.layout.fragment_users) {
                 return true
             }
         })
-        searchView.setOnCloseListener(object : SearchView.OnCloseListener {
-            override fun onClose(): Boolean {
-                usersViewModel.getAllUsers()
-                return true
-            }
-        })
+        searchView.setOnCloseListener {
+            usersViewModel.getAllUsers()
+            true
+        }
     }
 }
