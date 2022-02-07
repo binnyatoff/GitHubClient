@@ -1,12 +1,12 @@
-package ru.binnyatoff.githubclient.retrofit
+package ru.binnyatoff.githubclient.data.retrofit
 
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.binnyatoff.githubclient.models.User
-import ru.binnyatoff.githubclient.models.User_Details
-import ru.binnyatoff.githubclient.models.Search
+import ru.binnyatoff.githubclient.data.models.User
+import ru.binnyatoff.githubclient.data.models.User_Details
+import ru.binnyatoff.githubclient.data.models.Search
 
 interface Api {
     @GET("./users")

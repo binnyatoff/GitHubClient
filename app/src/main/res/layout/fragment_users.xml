@@ -5,7 +5,8 @@
     android:id="@+id/swiper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.feed.Users">
+    tools:context=".screens.feed.UsersFragment"
+    android:background="#F3F3F7">
 
 
     <FrameLayout
@@ -32,19 +33,21 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_ufo" />
+                android:src="@drawable/ic_ufo"
+                android:contentDescription="@string/ufo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Not Found"
+                android:text="@string/not_found"
                 android:textSize="25sp" />
         </LinearLayout>
 

@@ -11,9 +11,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.binnyatoff.githubclient.retrofit.Api
-import ru.binnyatoff.githubclient.room.Dao
-import ru.binnyatoff.githubclient.room.GitDatabase
+import ru.binnyatoff.githubclient.data.retrofit.Api
+import ru.binnyatoff.githubclient.data.room.Dao
+import ru.binnyatoff.githubclient.data.room.GitDatabase
 import javax.inject.Singleton
 
 @Module

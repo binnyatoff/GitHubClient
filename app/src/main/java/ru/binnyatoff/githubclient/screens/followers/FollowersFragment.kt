@@ -12,17 +12,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import ru.binnyatoff.githubclient.models.User
+import ru.binnyatoff.githubclient.data.models.User
 import android.widget.SearchView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.binnyatoff.githubclient.R
-import ru.binnyatoff.githubclient.screens.feed.adapter.UsersAdapter
-import ru.binnyatoff.githubclient.screens.feed.adapter.ClickDelegate
+import ru.binnyatoff.githubclient.screens.adapter.Adapter
+import ru.binnyatoff.githubclient.screens.adapter.ClickDelegate
 
 @AndroidEntryPoint
 class FollowersFragment : Fragment(R.layout.fragment_users) {
     private val followersViewModel: FollowersViewModel by viewModels()
-    private val adapter = UsersAdapter()
+    private val adapter = Adapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,7 +32,7 @@ class FollowersFragment : Fragment(R.layout.fragment_users) {
         val user: String = arguments?.get("user").toString()
         val ufo = view.findViewById<LinearLayout>(R.id.ufo)
         val swiper: SwipeRefreshLayout = view.findViewById(R.id.swiper)//swipe to refresh
-        observers(progressCircular, adapter, ufo, swiper)
+        observers(progressCircular, ufo, swiper)
         recyclerView(recyclerView)
         followersViewModel.getFollowers(user)
         swiper.setOnRefreshListener {
@@ -53,16 +53,15 @@ class FollowersFragment : Fragment(R.layout.fragment_users) {
 
     private fun observers(
         progressCircular: ProgressBar,
-        adapter: UsersAdapter,
         ufo: LinearLayout,
         swiper: SwipeRefreshLayout
     ) {
         followersViewModel.userList.observe(viewLifecycleOwner) {
+            swiper.isRefreshing = false
             if (it.isEmpty()) {
                 ufo.visibility = View.VISIBLE
-                swiper.isRefreshing = false
             } else {
-                swiper.isRefreshing = false
+                ufo.visibility = View.GONE
                 adapter.setData(it)
             }
         }
@@ -73,11 +72,10 @@ class FollowersFragment : Fragment(R.layout.fragment_users) {
 
         followersViewModel.loading.observe(viewLifecycleOwner) {
             if (!it) {
-                swiper.isRefreshing = false
+                swiper.isRefreshing = it
                 progressCircular.visibility = View.GONE
             }
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

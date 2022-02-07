@@ -1,4 +1,4 @@
-package ru.binnyatoff.githubclient.screens.feed.adapter
+package ru.binnyatoff.githubclient.screens.adapter
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.binnyatoff.githubclient.R
-import ru.binnyatoff.githubclient.models.User
+import ru.binnyatoff.githubclient.data.models.User
 
 class ViewHolder(itemView: View, private val delegate: ClickDelegate?) :
     RecyclerView.ViewHolder(itemView) {

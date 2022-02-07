@@ -1,7 +1,6 @@
 package ru.binnyatoff.githubclient.screens.feed
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
@@ -13,17 +12,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import ru.binnyatoff.githubclient.models.User
+import ru.binnyatoff.githubclient.data.models.User
 import android.widget.SearchView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.binnyatoff.githubclient.R
-import ru.binnyatoff.githubclient.screens.feed.adapter.UsersAdapter
-import ru.binnyatoff.githubclient.screens.feed.adapter.ClickDelegate
+import ru.binnyatoff.githubclient.screens.adapter.Adapter
+import ru.binnyatoff.githubclient.screens.adapter.ClickDelegate
 
 @AndroidEntryPoint
 class UsersFragment : Fragment(R.layout.fragment_users) {
     private val usersViewModel: UsersViewModel by viewModels()
-    private val adapter = UsersAdapter()
+    private val adapter = Adapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,16 +35,18 @@ class UsersFragment : Fragment(R.layout.fragment_users) {
         swiper.setOnRefreshListener {
             usersViewModel.refreshUsers()
         }
-
-        observers(progressCircular, swiper, ufo)
         recyclerView(recyclerView)
+        observers(progressCircular, swiper, ufo, recyclerView)
     }
 
     private fun recyclerView(recyclerView: RecyclerView) {
         adapter.attachDelegate(object : ClickDelegate {
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser)
-                findNavController().navigate(R.id.action_UsersFragment_to_UserDetailFragment, bundle)
+                findNavController().navigate(
+                    R.id.action_UsersFragment_to_UserDetailFragment,
+                    bundle
+                )
             }
         })
         recyclerView.adapter = adapter
@@ -55,7 +56,8 @@ class UsersFragment : Fragment(R.layout.fragment_users) {
     private fun observers(
         progressCircular: ProgressBar,
         swiper: SwipeRefreshLayout,
-        ufo: LinearLayout
+        ufo: LinearLayout,
+        recyclerView: RecyclerView
     ) {
         usersViewModel.userList.observe(viewLifecycleOwner) {
             adapter.setData(it)
@@ -63,10 +65,14 @@ class UsersFragment : Fragment(R.layout.fragment_users) {
         }
 
         usersViewModel.searchList.observe(viewLifecycleOwner) {
-            adapter.setData(it.items)
             swiper.isRefreshing = false
-            if (it.items.isEmpty()){
+            if (it.items.isEmpty()) {
                 ufo.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+            } else {
+                ufo.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+                adapter.setData(it.items)
             }
         }
 

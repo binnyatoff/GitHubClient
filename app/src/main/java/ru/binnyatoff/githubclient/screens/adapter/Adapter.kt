@@ -1,4 +1,4 @@
-package ru.binnyatoff.githubclient.screens.feed.adapter
+package ru.binnyatoff.githubclient.screens.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
-import ru.binnyatoff.githubclient.models.User
+import ru.binnyatoff.githubclient.data.models.User
 import ru.binnyatoff.githubclient.R
 import java.util.*
 import kotlin.collections.ArrayList
 
-class UsersAdapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
+class Adapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
 
     private var usersList = emptyList<User>()
     private var usersFilterList = emptyList<User>()

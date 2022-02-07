@@ -1,4 +1,4 @@
-package ru.binnyatoff.githubclient.models
+package ru.binnyatoff.githubclient.data.models
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo

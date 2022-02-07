@@ -5,4 +5,10 @@
     <string name="login">Login</string>
     <string name="name">Name</string>
     <string name="fale">Что-то сломалось 乁( . ര ʖ̯ ര . )ㄏ\n Загружаю с БД</string>
+    <string name="location">Location</string>
+    <string name="public_repos">Public Repos</string>
+    <string name="updated_at">Updated at</string>
+    <string name="created_ad">Created ad</string>
+    <string name="ufo">Ufo</string>
+    <string name="not_found">Not Found</string>
 </resources>

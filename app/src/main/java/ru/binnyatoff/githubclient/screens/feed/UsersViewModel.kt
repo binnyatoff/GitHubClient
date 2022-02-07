@@ -6,10 +6,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.binnyatoff.githubclient.models.Search
-import ru.binnyatoff.githubclient.retrofit.Api
-import ru.binnyatoff.githubclient.models.User
-import ru.binnyatoff.githubclient.room.Dao
+import ru.binnyatoff.githubclient.data.models.Search
+import ru.binnyatoff.githubclient.data.retrofit.Api
+import ru.binnyatoff.githubclient.data.models.User
+import ru.binnyatoff.githubclient.data.room.Dao
 import javax.inject.Inject
 
 @HiltViewModel

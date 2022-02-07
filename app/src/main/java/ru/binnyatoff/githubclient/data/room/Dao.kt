@@ -1,11 +1,11 @@
-package ru.binnyatoff.githubclient.room
+package ru.binnyatoff.githubclient.data.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import ru.binnyatoff.githubclient.models.User
+import ru.binnyatoff.githubclient.data.models.User
 
 @Dao
 interface Dao {

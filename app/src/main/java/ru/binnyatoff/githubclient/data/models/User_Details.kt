@@ -1,4 +1,4 @@
-package ru.binnyatoff.githubclient.models
+package ru.binnyatoff.githubclient.data.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -9,5 +9,8 @@ data class User_Details(
     val followers: Int,
     val location: String,
     val login: String,
-    var name: String
+    var name: String,
+    var public_repos:Int,
+    var updated_at:String,
+    var created_at:String
 ): Parcelable
