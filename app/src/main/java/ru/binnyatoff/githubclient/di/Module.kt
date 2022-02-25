@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.binnyatoff.githubclient.data.Repository
 import ru.binnyatoff.githubclient.data.retrofit.Api
 import ru.binnyatoff.githubclient.data.room.Dao
 import ru.binnyatoff.githubclient.data.room.GitDatabase
@@ -58,7 +59,13 @@ class Module {
     }
 
     @Provides
+    @Singleton
     fun provideDao(gitDatabase: GitDatabase): Dao {
         return gitDatabase.dao()
     }
+
+    @Provides
+    @Singleton
+    fun provideRepository(api: Api, dao: Dao): Repository = Repository(api, dao)
+
 }

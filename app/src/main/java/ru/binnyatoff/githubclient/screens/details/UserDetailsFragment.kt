@@ -1,12 +1,10 @@
 package ru.binnyatoff.githubclient.screens.details
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -25,7 +23,7 @@ class UserDetailsFragment : Fragment(R.layout.fragment_user_details) {
         super.onViewCreated(view, savedInstanceState)
 
         val currentUser = arguments?.getParcelable<User>("currentUser")
-        currentUser?.login?.let { userDetailsViewModel.getUserDeatails(it) }
+        currentUser?.login?.let { userDetailsViewModel.getUserDetails(it) }
 
         val login: TextView = view.findViewById(R.id.user_login)
         val avatar: ImageView = view.findViewById(R.id.avatar)
@@ -44,7 +42,7 @@ class UserDetailsFragment : Fragment(R.layout.fragment_user_details) {
         val bundle = bundleOf("user" to currentUser?.login)
         card_followers.setOnClickListener {
             findNavController().navigate(
-                R.id.action_UserDetailFragment_to_FollowersFragment,
+                R.id.action_userDeatailsFragment_to_followersFragment,
                 bundle
             )
         }

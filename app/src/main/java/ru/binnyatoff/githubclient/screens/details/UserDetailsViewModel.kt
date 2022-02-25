@@ -1,38 +1,42 @@
 package ru.binnyatoff.githubclient.screens.details
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import ru.binnyatoff.githubclient.data.retrofit.Api
+import ru.binnyatoff.githubclient.data.Repository
 import ru.binnyatoff.githubclient.data.models.User_Details
 import javax.inject.Inject
 
 @HiltViewModel
-class UserDetailsViewModel @Inject constructor(private val api: Api): ViewModel() {
+class UserDetailsViewModel @Inject constructor(private val repository: Repository): ViewModel() {
 
     val errorMessage = MutableLiveData<Boolean>()
-    var loading = MutableLiveData<Boolean>()
-    var userDetails = MutableLiveData<User_Details>()
+    val loading = MutableLiveData<Boolean>()
+    val userDetails = MutableLiveData<User_Details>()
+    var job: Job? = null
 
-    fun getUserDeatails(user: String) {
+    fun getUserDetails(user: String) {
         loading.postValue(true)
-        CoroutineScope(Dispatchers.IO).launch {
+        job = CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = api.user_details(user)
+                val response = repository.getUserDetails(user)
                 if (response.isSuccessful) {
-                    userDetails.postValue(response.body())
-                    Log.e("TAG", response.body().toString())
+                    userDetails.run { postValue(response.body()) }
                     loading.postValue(false)
                 }
             } catch (e: Exception) {
                 loading.postValue(false)
-                Log.e("TAG", e.toString())
                 errorMessage.postValue(true)
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
     }
 }

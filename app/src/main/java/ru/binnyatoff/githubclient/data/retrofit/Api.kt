@@ -10,13 +10,13 @@ import ru.binnyatoff.githubclient.data.models.Search
 
 interface Api {
     @GET("./users")
-    suspend fun listUser(): Response<List<User>>
+    suspend fun get_users(): Response<List<User>>
 
     @GET("/users/{user}/followers")
-    suspend fun followers(@Path("user") user: String): Response<List<User>>
+    suspend fun get_followers(@Path("user") user: String): Response<List<User>>
 
     @GET("/users/{user}")
-    suspend fun user_details(@Path("user") user: String): Response<User_Details>
+    suspend fun get_user_details(@Path("user") user: String): Response<User_Details>
 
     @GET("/search/users")
     suspend fun search(@Query("q")query: String): Response<Search>
