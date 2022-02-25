@@ -3,7 +3,6 @@ package ru.binnyatoff.githubclient.screens.followers
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
-import androidx.fragment.app.Fragment
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -13,16 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.data.models.User
-import android.widget.SearchView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.binnyatoff.githubclient.R
-import ru.binnyatoff.githubclient.screens.adapter.Adapter
+import ru.binnyatoff.githubclient.screens.SearchToList
 import ru.binnyatoff.githubclient.screens.adapter.ClickDelegate
 
 @AndroidEntryPoint
-class FollowersFragment : Fragment(R.layout.fragment_users) {
+class FollowersFragment : SearchToList(R.layout.fragment_users) {
     private val followersViewModel: FollowersViewModel by viewModels()
-    private val adapter = Adapter()
+    private val adapter = getMyAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,7 +42,10 @@ class FollowersFragment : Fragment(R.layout.fragment_users) {
         adapter.attachDelegate(object : ClickDelegate {
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser)
-                findNavController().navigate(R.id.action_FollowersFragment_to_UserDetailFragment, bundle)
+                findNavController().navigate(
+                    R.id.action_followersFragment_to_userDeatailsFragment,
+                    bundle
+                )
             }
         })
         recyclerView.adapter = adapter
@@ -76,25 +77,5 @@ class FollowersFragment : Fragment(R.layout.fragment_users) {
                 progressCircular.visibility = View.GONE
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        inflater.inflate(R.menu.main_menu, menu)
-        val item = menu.findItem(R.id.search)
-        val searchView: SearchView = item.actionView as SearchView
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                adapter.filter.filter(query)
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                adapter.filter.filter(newText)
-                return true
-            }
-        })
     }
 }

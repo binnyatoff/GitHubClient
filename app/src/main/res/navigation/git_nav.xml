@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/git_nav"
-    app:startDestination="@id/Users">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/Users"
-        android:name="ru.binnyatoff.githubclient.screens.feed.UsersFragment"
-        android:label="fragment_users"
-        tools:layout="@layout/fragment_users">
+        android:id="@+id/homeFragment"
+        android:name="ru.binnyatoff.githubclient.screens.home.HomeFragment"
+        android:label="HomeFragment">
         <action
-            android:id="@+id/action_UsersFragment_to_UserDetailFragment"
-            app:destination="@id/UserDetail" />
+            android:id="@+id/action_homeFragment_to_userDeatailsFragment"
+            app:destination="@id/userDeatailsFragment" />
     </fragment>
-
     <fragment
-        android:id="@+id/UserDetail"
+        android:id="@+id/searchFragment"
+        android:name="ru.binnyatoff.githubclient.screens.search.SearchFragment"
+        android:label="SearchFragment">
+        <action
+            android:id="@+id/action_searchFragment_to_userDeatailsFragment"
+            app:destination="@id/userDeatailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDeatailsFragment"
         android:name="ru.binnyatoff.githubclient.screens.details.UserDetailsFragment"
-        android:label="fragment_user"
-        tools:layout="@layout/fragment_user_details">
+        android:label="UserDetailsFragment">
         <action
-            android:id="@+id/action_UserDetailFragment_to_FollowersFragment"
-            app:destination="@id/Followers" />
+            android:id="@+id/action_userDeatailsFragment_to_followersFragment"
+            app:destination="@id/followersFragment" />
     </fragment>
-
     <fragment
-        android:id="@+id/Followers"
+        android:id="@+id/followersFragment"
         android:name="ru.binnyatoff.githubclient.screens.followers.FollowersFragment"
-        android:label="Followers">
+        android:label="FollowersFragment" >
         <action
-            android:id="@+id/action_FollowersFragment_to_UserDetailFragment"
-            app:destination="@id/UserDetail" />
+            android:id="@+id/action_followersFragment_to_userDeatailsFragment"
+            app:destination="@id/userDeatailsFragment" />
     </fragment>
 </navigation>

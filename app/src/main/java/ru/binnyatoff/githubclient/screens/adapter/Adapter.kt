@@ -38,7 +38,7 @@ class Adapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
     @SuppressLint("NotifyDataSetChanged")
     fun setData(user: List<User>) {
         usersList = user
-       usersFilterList = usersList
+        usersFilterList = usersList
         notifyDataSetChanged()
     }
 
@@ -46,8 +46,8 @@ class Adapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val charSearch = constraint.toString()
-                if (charSearch.isEmpty()) {
-                    usersFilterList = usersList
+                usersFilterList = if (charSearch.isEmpty()) {
+                    usersList
                 } else {
                     val resultList = ArrayList<User>()
                     for (user in usersList) {
@@ -57,7 +57,7 @@ class Adapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
                             resultList.add(user)
                         }
                     }
-                    usersFilterList = resultList
+                    resultList
                 }
                 val filterResults = FilterResults()
                 filterResults.values = usersFilterList
@@ -65,6 +65,7 @@ class Adapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
             }
 
             @SuppressLint("NotifyDataSetChanged")
+            @Suppress("UNCHECKED_CAST")
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 usersFilterList = results?.values as List<User>
                 notifyDataSetChanged()

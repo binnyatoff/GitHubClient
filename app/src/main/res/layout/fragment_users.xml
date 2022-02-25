@@ -5,8 +5,8 @@
     android:id="@+id/swiper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.feed.UsersFragment"
-    android:background="#F3F3F7">
+    android:background="#F3F3F7"
+    tools:context=".screens.home.HomeFragment">
 
 
     <FrameLayout
@@ -26,7 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:indeterminate="true" />
-
         <LinearLayout
             android:id="@+id/ufo"
             android:layout_width="match_parent"
@@ -40,8 +39,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_ufo"
-                android:contentDescription="@string/ufo" />
+                android:contentDescription="@string/ufo"
+                android:src="@drawable/ic_ufo" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -50,6 +49,7 @@
                 android:text="@string/not_found"
                 android:textSize="25sp" />
         </LinearLayout>
-
     </FrameLayout>
+
+
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
