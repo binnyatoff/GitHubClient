@@ -21,6 +21,7 @@ class Repository(private var api: Api, private var dao: Dao) {
                 }
                 else {
                     get_users.body()?.let {
+                        this.dao.delete()
                         this.dao.addUser(it)
                     }
                     Log.e("TAG", "Loaded from api and added to database")

@@ -47,7 +47,7 @@ class UserDetailsFragment : Fragment(R.layout.fragment_user_details) {
             )
         }
 
-        fun name_null(name: String) {
+        fun name_null(name: String?) {
             if (name == null) {
                 user_name.visibility = View.GONE
                 user_name_text.visibility = View.GONE
@@ -79,7 +79,7 @@ class UserDetailsFragment : Fragment(R.layout.fragment_user_details) {
     }
 
 
-    fun getAvatar(view: View, avatar_url: String, avatar: ImageView) {
+    private fun getAvatar(view: View, avatar_url: String, avatar: ImageView) {
         Glide.with(view)
             .load(avatar_url)
             .circleCrop()
