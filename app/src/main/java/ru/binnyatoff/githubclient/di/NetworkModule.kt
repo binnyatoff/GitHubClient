@@ -1,26 +1,19 @@
 package ru.binnyatoff.githubclient.di
 
-import android.content.Context
-import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.binnyatoff.githubclient.data.Repository
-import ru.binnyatoff.githubclient.data.retrofit.Api
-import ru.binnyatoff.githubclient.data.room.Dao
-import ru.binnyatoff.githubclient.data.room.GitDatabase
+import ru.binnyatoff.githubclient.data.network.retrofit.Api
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class Module {
-
+class NetworkModule {
     @Provides
     @Singleton
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
@@ -47,25 +40,4 @@ class Module {
     @Provides
     @Singleton
     fun provideApi(retrofit: Retrofit): Api = retrofit.create(Api::class.java)
-
-    @Provides
-    @Singleton
-    fun provideGitDatabase(@ApplicationContext context: Context): GitDatabase {
-        return Room.databaseBuilder(
-            context,
-            GitDatabase::class.java,
-            "data"
-        ).build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideDao(gitDatabase: GitDatabase): Dao {
-        return gitDatabase.dao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideRepository(api: Api, dao: Dao): Repository = Repository(api, dao)
-
 }

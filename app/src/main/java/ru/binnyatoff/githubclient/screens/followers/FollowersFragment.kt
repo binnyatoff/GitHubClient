@@ -11,14 +11,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import ru.binnyatoff.githubclient.data.models.User
+import ru.binnyatoff.githubclient.repository.models.User
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.binnyatoff.githubclient.R
 import ru.binnyatoff.githubclient.screens.SearchToList
 import ru.binnyatoff.githubclient.screens.adapter.ClickDelegate
 
 @AndroidEntryPoint
-class FollowersFragment : SearchToList(R.layout.fragment_users) {
+class FollowersFragment : SearchToList(R.layout.fragment_home) {
     private val followersViewModel: FollowersViewModel by viewModels()
     private val adapter = getMyAdapter()
 
@@ -57,7 +57,7 @@ class FollowersFragment : SearchToList(R.layout.fragment_users) {
         ufo: LinearLayout,
         swiper: SwipeRefreshLayout
     ) {
-        followersViewModel.userList.observe(viewLifecycleOwner) {
+        followersViewModel.followersList.observe(viewLifecycleOwner) {
             swiper.isRefreshing = false
             if (it.isEmpty()) {
                 ufo.visibility = View.VISIBLE

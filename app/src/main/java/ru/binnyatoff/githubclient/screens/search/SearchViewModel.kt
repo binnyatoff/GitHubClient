@@ -6,8 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.binnyatoff.githubclient.data.Repository
-import ru.binnyatoff.githubclient.data.models.Search
+import ru.binnyatoff.githubclient.repository.Repository
+import ru.binnyatoff.githubclient.repository.models.Search
 import javax.inject.Inject
 
 @HiltViewModel

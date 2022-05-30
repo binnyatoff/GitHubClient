@@ -7,8 +7,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import ru.binnyatoff.githubclient.data.Repository
-import ru.binnyatoff.githubclient.data.models.User_Details
+import ru.binnyatoff.githubclient.repository.Repository
+import ru.binnyatoff.githubclient.repository.models.UserDetails
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,7 +16,7 @@ class UserDetailsViewModel @Inject constructor(private val repository: Repositor
 
     val errorMessage = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
-    val userDetails = MutableLiveData<User_Details>()
+    val userDetails = MutableLiveData<UserDetails>()
     var job: Job? = null
 
     fun getUserDetails(user: String) {

@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.R
-import ru.binnyatoff.githubclient.data.models.User
+import ru.binnyatoff.githubclient.repository.models.User
 
 @AndroidEntryPoint
 class UserDetailsFragment : Fragment(R.layout.fragment_user_details) {

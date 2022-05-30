@@ -10,6 +10,7 @@ import ru.binnyatoff.githubclient.screens.adapter.Adapter
 
 open class SearchToList(contentLayoutId: Int) : Fragment(contentLayoutId) {
     private val adapter = Adapter()
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 

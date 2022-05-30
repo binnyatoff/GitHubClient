@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.R
-import ru.binnyatoff.githubclient.data.models.User
+import ru.binnyatoff.githubclient.repository.models.User
 import ru.binnyatoff.githubclient.screens.adapter.Adapter
 import ru.binnyatoff.githubclient.screens.adapter.ClickDelegate
 

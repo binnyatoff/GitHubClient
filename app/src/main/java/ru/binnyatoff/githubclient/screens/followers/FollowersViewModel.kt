@@ -7,9 +7,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import ru.binnyatoff.githubclient.data.Repository
-import ru.binnyatoff.githubclient.data.retrofit.Api
-import ru.binnyatoff.githubclient.data.models.User
+import ru.binnyatoff.githubclient.repository.Repository
+import ru.binnyatoff.githubclient.repository.models.User
 import javax.inject.Inject
 
 
@@ -18,7 +17,7 @@ class FollowersViewModel @Inject constructor(private val repository: Repository)
 
     val errorMessage = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
-    val userList = MutableLiveData<List<User>>()
+    val followersList = MutableLiveData<List<User>>()
     var job: Job? = null
 
     fun getFollowers(user: String) {
@@ -27,7 +26,7 @@ class FollowersViewModel @Inject constructor(private val repository: Repository)
             try {
                 val response = repository.getFollowers(user)
                 if (response.isSuccessful) {
-                    with(userList) { postValue(response.body()) }
+                    followersList.postValue(response.body())
                     loading.postValue(false)
                 }
             } catch (e: Exception) {

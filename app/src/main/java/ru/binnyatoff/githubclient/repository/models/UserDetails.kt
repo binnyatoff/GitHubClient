@@ -1,10 +1,10 @@
-package ru.binnyatoff.githubclient.data.models
+package ru.binnyatoff.githubclient.repository.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class User_Details(
+data class UserDetails(
     val avatar_url: String,
     val followers: Int,
     val location: String,
