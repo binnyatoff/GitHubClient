@@ -1,4 +1,4 @@
-package ru.binnyatoff.githubclient.screens
+package ru.binnyatoff.githubclient.screens.adapter
 
 import android.view.Menu
 import android.view.MenuInflater
@@ -30,6 +30,7 @@ open class SearchToList(contentLayoutId: Int) : Fragment(contentLayoutId) {
             }
         })
     }
+
     fun getMyAdapter():Adapter{
         return adapter
     }

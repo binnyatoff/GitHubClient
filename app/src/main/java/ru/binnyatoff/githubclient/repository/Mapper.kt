@@ -21,7 +21,7 @@ fun UserDetailsNetwork.toUserDetails(): UserDetails {
         login = login,
         name = name,
         public_repos = public_repos,
-        updated_at = updated_at,
-        created_at = created_at
+        updated_at = updated_at.substring(0, 10),
+        created_at = created_at.substring(0, 10)
     )
 }

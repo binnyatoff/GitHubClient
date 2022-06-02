@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.repository.models.User
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.binnyatoff.githubclient.R
-import ru.binnyatoff.githubclient.screens.SearchToList
+import ru.binnyatoff.githubclient.screens.adapter.SearchToList
 import ru.binnyatoff.githubclient.screens.adapter.ClickDelegate
 
 @AndroidEntryPoint

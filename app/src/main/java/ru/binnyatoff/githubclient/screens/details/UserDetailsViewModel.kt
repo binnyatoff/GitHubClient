@@ -1,42 +1,52 @@
 package ru.binnyatoff.githubclient.screens.details
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.binnyatoff.githubclient.repository.Repository
-import ru.binnyatoff.githubclient.repository.models.UserDetails
+import ru.binnyatoff.githubclient.repository.toUserDetails
+import ru.binnyatoff.githubclient.screens.home.EventHandler
 import javax.inject.Inject
 
 @HiltViewModel
-class UserDetailsViewModel @Inject constructor(private val repository: Repository): ViewModel() {
+class UserDetailsViewModel @Inject constructor(private val repository: Repository) : ViewModel(),
+    EventHandler<UserDetailsState> {
 
-    val errorMessage = MutableLiveData<Boolean>()
-    val loading = MutableLiveData<Boolean>()
-    val userDetails = MutableLiveData<UserDetails>()
-    var job: Job? = null
+    private val _userDetailsState = MutableLiveData<UserDetailsState>()
+    val userDetailsState: LiveData<UserDetailsState> = _userDetailsState
 
     fun getUserDetails(user: String) {
-        loading.postValue(true)
-        job = CoroutineScope(Dispatchers.IO).launch {
+        _userDetailsState.postValue(UserDetailsState.Loading)
+        viewModelScope.launch {
             try {
                 val response = repository.getUserDetails(user)
                 if (response.isSuccessful) {
-                    userDetails.run { postValue(response.body()) }
-                    loading.postValue(false)
+                    val body = response.body()
+                    if (body != null) {
+                        val userDetails = body.toUserDetails()
+                        if (body.name != null) {
+                            _userDetailsState.postValue(UserDetailsState.LoadedWithName(userDetails = userDetails))
+                        } else {
+                            _userDetailsState.postValue(
+                                UserDetailsState.LoadedWithoutName(
+                                    userDetails = userDetails
+                                )
+                            )
+                        }
+                    } else {
+                        _userDetailsState.postValue(UserDetailsState.Empty)
+                    }
                 }
             } catch (e: Exception) {
-                loading.postValue(false)
-                errorMessage.postValue(true)
+                _userDetailsState.postValue(UserDetailsState.Error(e.toString()))
             }
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        job?.cancel()
+    override fun obtainEvent(event: UserDetailsState) {
+        //TODO
     }
 }

@@ -9,15 +9,19 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.R
+import ru.binnyatoff.githubclient.databinding.FragmentUserDetailsBinding
 import ru.binnyatoff.githubclient.repository.models.User
+import ru.binnyatoff.githubclient.repository.models.UserDetails
 
 @AndroidEntryPoint
 class UserDetailsFragment : Fragment(R.layout.fragment_user_details) {
     private val userDetailsViewModel: UserDetailsViewModel by viewModels()
+    private val binding: FragmentUserDetailsBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,56 +29,74 @@ class UserDetailsFragment : Fragment(R.layout.fragment_user_details) {
         val currentUser = arguments?.getParcelable<User>("currentUser")
         currentUser?.login?.let { userDetailsViewModel.getUserDetails(it) }
 
-        val login: TextView = view.findViewById(R.id.user_login)
-        val avatar: ImageView = view.findViewById(R.id.avatar)
-        val followers_amount: TextView = view.findViewById(R.id.followers_amount)
-        val location: TextView = view.findViewById(R.id.location)
-        val user_name: TextView = view.findViewById(R.id.user_name)
-        val user_name_text: TextView = view.findViewById(R.id.user_name_text)
-        val ufo: LinearLayout = view.findViewById(R.id.ufo_details)
-        val card: MaterialCardView = view.findViewById(R.id.card)
-        val card_followers: MaterialCardView = view.findViewById(R.id.card_followers)
-        val card_location: MaterialCardView = view.findViewById(R.id.card_location)
-        val public_repos: TextView = view.findViewById(R.id.public_repos)
-        val updated: TextView = view.findViewById(R.id.updated)
-        val created: TextView = view.findViewById(R.id.created)
-
         val bundle = bundleOf("user" to currentUser?.login)
-        card_followers.setOnClickListener {
+        binding.cardFollowers.setOnClickListener {
             findNavController().navigate(
                 R.id.action_userDeatailsFragment_to_followersFragment,
                 bundle
             )
         }
 
-        fun name_null(name: String?) {
-            if (name == null) {
-                user_name.visibility = View.GONE
-                user_name_text.visibility = View.GONE
-            } else {
-                user_name.text = name
-            }
-        }//Бывают аккаунты без имени
-
-        userDetailsViewModel.userDetails.observe(viewLifecycleOwner) {
-            followers_amount.text = it.followers.toString()
-            location.text = it.location
-            login.text = it.login
-            public_repos.text = it.public_repos.toString()
-            updated.text = it.updated_at.substring(0, 10)
-            created.text = it.created_at.substring(0, 10)
-            getAvatar(view, it.avatar_url, avatar)
-            name_null(it.name)
-
-
+        userDetailsViewModel.userDetailsState.observe(viewLifecycleOwner) { state ->
+            getState(state)
         }
-        userDetailsViewModel.errorMessage.observe(viewLifecycleOwner) {
-            if (it) {
-                ufo.visibility = View.VISIBLE
-                card.visibility = View.GONE
-                card_followers.visibility = View.GONE
-                card_location.visibility = View.GONE
-            }
+    }
+
+    private fun getState(state: UserDetailsState) {
+        when (state) {
+            is UserDetailsState.Loading -> isLoading()
+            is UserDetailsState.LoadedWithName -> isLoadedWithName(state.userDetails)
+            is UserDetailsState.LoadedWithoutName -> isLoadedWithoutName(state.userDetails)
+            is UserDetailsState.Empty -> isEmpty()
+            is UserDetailsState.Error -> isError()
+        }
+    }
+
+    private fun isLoading() {
+
+    }
+
+    private fun isLoadedWithName(userDetails: UserDetails) {
+        with(binding) {
+            followersAmount.text = userDetails.followers.toString()
+            location.text = userDetails.location
+            userLogin.text = userDetails.login
+            publicRepos.text = userDetails.public_repos.toString()
+            updated.text = userDetails.updated_at
+            created.text = userDetails.created_at
+            userLogin.visibility = View.VISIBLE
+            getAvatar(requireView(), userDetails.avatar_url, binding.avatar)
+        }
+    }
+
+    private fun isLoadedWithoutName(userDetails: UserDetails) {
+        with(binding) {
+            followersAmount.text = userDetails.followers.toString()
+            location.text = userDetails.location
+            userLogin.text = userDetails.login
+            userLogin.visibility = View.GONE
+            publicRepos.text = userDetails.toString()
+            updated.text = userDetails.updated_at
+            created.text = userDetails.created_at
+            getAvatar(requireView(), userDetails.avatar_url, binding.avatar)
+        }
+    }
+
+    private fun isError() {
+        with(binding) {
+            ufoDetails.visibility = View.VISIBLE
+            card.visibility = View.GONE
+            cardFollowers.visibility = View.GONE
+            cardLocation.visibility = View.GONE
+        }
+    }
+
+    private fun isEmpty() {
+        with(binding) {
+            ufoDetails.visibility = View.VISIBLE
+            card.visibility = View.GONE
+            cardFollowers.visibility = View.GONE
+            cardLocation.visibility = View.GONE
         }
     }
 

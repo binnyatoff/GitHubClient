@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/followersFragment"
         android:name="ru.binnyatoff.githubclient.screens.followers.FollowersFragment"
-        android:label="FollowersFragment" >
+        android:label="FollowersFragment">
         <action
             android:id="@+id/action_followersFragment_to_userDeatailsFragment"
             app:destination="@id/userDeatailsFragment" />

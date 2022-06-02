@@ -9,6 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.binnyatoff.githubclient.repository.Repository
 import ru.binnyatoff.githubclient.repository.models.User
+import ru.binnyatoff.githubclient.repository.toUser
 import javax.inject.Inject
 
 
@@ -26,7 +27,10 @@ class FollowersViewModel @Inject constructor(private val repository: Repository)
             try {
                 val response = repository.getFollowers(user)
                 if (response.isSuccessful) {
-                    followersList.postValue(response.body())
+                    val body = response.body()
+                    followersList.postValue(response.body()?.map{
+                        it.toUser()
+                    })
                     loading.postValue(false)
                 }
             } catch (e: Exception) {
