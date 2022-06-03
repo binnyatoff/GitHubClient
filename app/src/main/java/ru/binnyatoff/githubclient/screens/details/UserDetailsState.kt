@@ -9,3 +9,8 @@ sealed class UserDetailsState {
     object Empty : UserDetailsState()
     data class Error(var error: String) : UserDetailsState()
 }
+
+sealed class UserDetailsEvent{
+    data class ScreenInit(val user:String?): UserDetailsEvent()
+    object RefreshScreen:UserDetailsEvent()
+}

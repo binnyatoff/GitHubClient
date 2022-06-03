@@ -36,7 +36,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
 
         searchViewModel.searchList.observe(viewLifecycleOwner) {
-            Log.e("TAG", it.items.toString())
             adapter.setData(it.items)
             if (it.items.isEmpty()) {
                 ufo.isVisible = true
@@ -46,6 +45,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 ufo_text.isVisible = false
 
             }
+
+
+
             adapter.attachDelegate(object : ClickDelegate {
                 override fun onClick(currentUser: User) {
                     val bundle = bundleOf("currentUser" to currentUser)

@@ -19,17 +19,16 @@ import ru.binnyatoff.githubclient.screens.adapter.ClickDelegate
 @AndroidEntryPoint
 class HomeFragment : SearchToList(R.layout.fragment_home) {
 
-    private lateinit var adapter: Adapter
+    private var adapter: Adapter? = Adapter()
     private val viewModel by viewModels<HomeViewModel>()
     private val binding: FragmentHomeBinding by viewBinding()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true) //меню
-        adapter = Adapter()
-        adapter.attachDelegate(object : ClickDelegate {
+        adapter?.attachDelegate(object : ClickDelegate {
             override fun onClick(currentUser: User) {
-                val bundle = bundleOf("currentUser" to currentUser)
+                val bundle = bundleOf("currentUser" to currentUser.login)
                 findNavController().navigate(
                     R.id.action_homeFragment_to_userDeatailsFragment,
                     bundle
@@ -55,6 +54,11 @@ class HomeFragment : SearchToList(R.layout.fragment_home) {
         }
     }
 
+    override fun onDestroy() {
+        adapter = null
+        super.onDestroy()
+    }
+
     private fun getState(state: HomeFragmentState) {
         when (state) {
             is HomeFragmentState.Loading -> {
@@ -75,7 +79,7 @@ class HomeFragment : SearchToList(R.layout.fragment_home) {
                 binding.swiper.isRefreshing = false
                 binding.recyclerview.visibility = View.VISIBLE
                 binding.progressCircular.visibility = View.GONE
-                adapter.setData(state.userList)
+                adapter?.setData(state.userList)
             }
         }
     }

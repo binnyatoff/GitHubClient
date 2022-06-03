@@ -13,33 +13,29 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.repository.models.User
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewbinding.ViewBinding
+import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.binnyatoff.githubclient.R
+import ru.binnyatoff.githubclient.databinding.FragmentHomeBinding
+import ru.binnyatoff.githubclient.screens.adapter.Adapter
 import ru.binnyatoff.githubclient.screens.adapter.SearchToList
 import ru.binnyatoff.githubclient.screens.adapter.ClickDelegate
 
 @AndroidEntryPoint
 class FollowersFragment : SearchToList(R.layout.fragment_home) {
+
     private val followersViewModel: FollowersViewModel by viewModels()
-    private val adapter = getMyAdapter()
+    private val binding: FragmentHomeBinding by viewBinding()
+    private var adapter: Adapter? = getMyAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerview)
-        val progressCircular: ProgressBar = view.findViewById(R.id.progress_circular)
         val user: String = arguments?.get("user").toString()
-        val ufo = view.findViewById<LinearLayout>(R.id.ufo)
-        val swiper: SwipeRefreshLayout = view.findViewById(R.id.swiper)//swipe to refresh
-        observers(progressCircular, ufo, swiper)
-        recyclerView(recyclerView)
-        followersViewModel.getFollowers(user)
-        swiper.setOnRefreshListener {
-            followersViewModel.getFollowers(user)
-        }
-    }
 
-    private fun recyclerView(recyclerView: RecyclerView) {
-        adapter.attachDelegate(object : ClickDelegate {
+        followersViewModel.obtainEvent(FollowersFragmentEvent.HomeInit(user = user))
+
+        adapter?.attachDelegate(object : ClickDelegate {
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser)
                 findNavController().navigate(
@@ -48,34 +44,55 @@ class FollowersFragment : SearchToList(R.layout.fragment_home) {
                 )
             }
         })
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        binding.recyclerview.adapter = adapter
+        binding.recyclerview.layoutManager = LinearLayoutManager(context)
+
+        followersViewModel.followersViewState.observe(viewLifecycleOwner) { state ->
+            setView(state)
+        }
+
+        binding.swiper.setOnRefreshListener {
+            followersViewModel.obtainEvent(FollowersFragmentEvent.HomeInit(user = user))
+        }
     }
 
-    private fun observers(
-        progressCircular: ProgressBar,
-        ufo: LinearLayout,
-        swiper: SwipeRefreshLayout
-    ) {
-        followersViewModel.followersList.observe(viewLifecycleOwner) {
-            swiper.isRefreshing = false
-            if (it.isEmpty()) {
-                ufo.visibility = View.VISIBLE
-            } else {
-                ufo.visibility = View.GONE
-                adapter.setData(it)
-            }
+    private fun setView(state: FollowersFragmentState?) {
+        when (state) {
+            is FollowersFragmentState.Loading -> loading()
+            is FollowersFragmentState.Loaded -> loaded(state)
+            is FollowersFragmentState.Empty -> empty()
+            is FollowersFragmentState.Error -> error(state)
         }
+    }
 
-        followersViewModel.errorMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
+    private fun loading() {
+        binding.recyclerview.visibility = View.GONE
+        binding.swiper.isRefreshing = false
+        binding.progressCircular.visibility = View.VISIBLE
 
-        followersViewModel.loading.observe(viewLifecycleOwner) {
-            if (!it) {
-                swiper.isRefreshing = it
-                progressCircular.visibility = View.GONE
-            }
-        }
+    }
+
+    private fun loaded(state: FollowersFragmentState.Loaded) {
+        binding.swiper.isRefreshing = false
+        binding.recyclerview.visibility = View.VISIBLE
+        binding.progressCircular.visibility = View.GONE
+        adapter?.setData(state.followersList)
+    }
+
+    private fun empty() {
+        binding.recyclerview.visibility = View.GONE
+        binding.progressCircular.visibility = View.GONE
+    }
+
+    private fun error(state: FollowersFragmentState.Error) {
+        binding.recyclerview.visibility = View.GONE
+        binding.progressCircular.visibility = View.GONE
+        Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onDestroy() {
+        adapter = null
+        super.onDestroy()
     }
 }

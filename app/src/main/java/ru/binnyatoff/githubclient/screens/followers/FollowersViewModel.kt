@@ -1,48 +1,81 @@
 package ru.binnyatoff.githubclient.screens.followers
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.binnyatoff.githubclient.repository.Repository
-import ru.binnyatoff.githubclient.repository.models.User
 import ru.binnyatoff.githubclient.repository.toUser
+import ru.binnyatoff.githubclient.screens.helpers.EventHandler
+
 import javax.inject.Inject
 
 
 @HiltViewModel
-class FollowersViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
+class FollowersViewModel @Inject constructor(private val repository: Repository) : ViewModel(),
+    EventHandler<FollowersFragmentEvent> {
 
-    val errorMessage = MutableLiveData<String>()
-    val loading = MutableLiveData<Boolean>()
-    val followersList = MutableLiveData<List<User>>()
-    var job: Job? = null
+    private val _followerViewState =
+        MutableLiveData<FollowersFragmentState>(FollowersFragmentState.Loading)
 
-    fun getFollowers(user: String) {
-        loading.postValue(true)
-        job = CoroutineScope(Dispatchers.IO).launch {
+    val followersViewState: LiveData<FollowersFragmentState> = _followerViewState
+
+    override fun obtainEvent(event: FollowersFragmentEvent) {
+        when (val currentState = _followerViewState.value) {
+            is FollowersFragmentState.Loading -> reduce(event, currentState)
+            is FollowersFragmentState.Loaded -> reduce(event, currentState)
+            is FollowersFragmentState.Empty -> reduce(event, currentState)
+            is FollowersFragmentState.Error -> reduce(event, currentState)
+        }
+    }
+
+    private fun reduce(event: FollowersFragmentEvent, state: FollowersFragmentState.Loading) {
+        when (event) {
+            is FollowersFragmentEvent.HomeInit -> getFollowers(event.user)
+        }
+    }
+
+    private fun reduce(event: FollowersFragmentEvent, state: FollowersFragmentState.Loaded) {
+        when (event) {
+            is FollowersFragmentEvent.HomeInit -> getFollowers(event.user)
+        }
+    }
+
+    private fun reduce(event: FollowersFragmentEvent, state: FollowersFragmentState.Empty) {
+        when (event) {
+            is FollowersFragmentEvent.HomeInit -> getFollowers(event.user)
+        }
+    }
+
+    private fun reduce(event: FollowersFragmentEvent, state: FollowersFragmentState.Error) {
+        when (event) {
+            is FollowersFragmentEvent.HomeInit -> getFollowers(event.user)
+        }
+    }
+
+
+    private fun getFollowers(user: String) {
+        _followerViewState.postValue(FollowersFragmentState.Loading)
+        viewModelScope.launch {
             try {
                 val response = repository.getFollowers(user)
                 if (response.isSuccessful) {
                     val body = response.body()
-                    followersList.postValue(response.body()?.map{
-                        it.toUser()
-                    })
-                    loading.postValue(false)
+                    if (body != null) {
+                        val userList = body.map {
+                            it.toUser()
+                        }
+                        _followerViewState.postValue(FollowersFragmentState.Loaded(userList))
+                    } else {
+                        _followerViewState.postValue(FollowersFragmentState.Empty)
+                    }
                 }
             } catch (e: Exception) {
-                loading.postValue(false)
-                errorMessage.postValue(e.toString())
+                _followerViewState.postValue(FollowersFragmentState.Error(e.toString()))
             }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        job?.cancel()
     }
 }
 

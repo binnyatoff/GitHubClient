@@ -5,11 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.binnyatoff.githubclient.repository.Repository
 import ru.binnyatoff.githubclient.repository.toUser
+import ru.binnyatoff.githubclient.screens.helpers.EventHandler
 import javax.inject.Inject
 
 @HiltViewModel

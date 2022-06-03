@@ -15,6 +15,3 @@ sealed class HomeFragmentEvent {
     object onUserClick : HomeFragmentEvent()
 }
 
-interface EventHandler<T> {
-    fun obtainEvent(event: T)
-}
