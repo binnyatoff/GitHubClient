@@ -8,6 +8,7 @@ import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import ru.binnyatoff.githubclient.repository.models.User
 import ru.binnyatoff.githubclient.R
+import ru.binnyatoff.githubclient.databinding.UserItemBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -22,9 +23,10 @@ class Adapter : RecyclerView.Adapter<ViewHolder>(), Filterable {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val itemBinding = UserItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.user_item, parent, false)
-        return ViewHolder(view, delegate)
+        return ViewHolder(itemBinding, delegate)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

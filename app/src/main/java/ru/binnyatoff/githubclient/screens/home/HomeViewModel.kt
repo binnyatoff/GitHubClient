@@ -1,5 +1,6 @@
 package ru.binnyatoff.githubclient.screens.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,7 +21,6 @@ class HomeViewModel @Inject constructor(private val repository: Repository) :
 
     private val _homeViewState = MutableLiveData<HomeFragmentState>(HomeFragmentState.Loading)
     val homeViewState: LiveData<HomeFragmentState> = _homeViewState
-
 
     override fun obtainEvent(event: HomeFragmentEvent) {
         when (val currentState = _homeViewState.value) {
@@ -67,6 +67,7 @@ class HomeViewModel @Inject constructor(private val repository: Repository) :
     }
 
     private fun getRepository() {
+        Log.e("ViewModel", "Loading")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 when (val response = repository.getUsersNew()) {

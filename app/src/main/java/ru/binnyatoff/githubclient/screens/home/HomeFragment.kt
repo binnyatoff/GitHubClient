@@ -32,9 +32,19 @@ class HomeFragment : SearchToList(R.layout.fragment_home) {
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true) //меню
+        viewModel.obtainEvent(event = HomeFragmentEvent.HomeInit)
+
+        with(binding) {
+            recyclerview.adapter = adapter
+            recyclerview.layoutManager = LinearLayoutManager(requireContext())
+
+            swiper.setOnRefreshListener {
+                viewModel.obtainEvent(event = HomeFragmentEvent.ReloadScreen)
+            }
+        }
 
         adapter?.attachDelegate(object : ClickDelegate {
             override fun onClick(currentUser: User) {
@@ -45,33 +55,23 @@ class HomeFragment : SearchToList(R.layout.fragment_home) {
                 )
             }
         })
-        viewModel.obtainEvent(event = HomeFragmentEvent.HomeInit)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        with(binding) {
-            recyclerview.adapter = adapter
-            recyclerview.layoutManager = LinearLayoutManager(requireContext())
-
-            swiper.setOnRefreshListener {
-                viewModel.obtainEvent(event = HomeFragmentEvent.ReloadScreen)
-            }
-        }
 
         viewModel.homeViewState.observe(viewLifecycleOwner) { state ->
-            getState(state)
+            setState(state)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        adapter = null
         _binding = null
-
     }
 
-    private fun getState(state: HomeFragmentState) {
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter = null
+    }
+
+    private fun setState(state: HomeFragmentState) {
         when (state) {
             is HomeFragmentState.Loading -> {
                 binding.recyclerview.visibility = View.GONE

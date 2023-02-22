@@ -41,7 +41,7 @@ class FollowersFragment : SearchToList(R.layout.fragment_home) {
 
         adapter?.attachDelegate(object : ClickDelegate {
             override fun onClick(currentUser: User) {
-                val bundle = bundleOf("currentUser" to currentUser)
+                val bundle = bundleOf("currentUser" to currentUser.login)
                 findNavController().navigate(
                     R.id.action_followersFragment_to_userDeatailsFragment,
                     bundle

@@ -41,7 +41,6 @@ class UserDetailsFragment : Fragment(R.layout.fragment_user_details) {
             getState(state)
         }
 
-
         val bundle = bundleOf("user" to userLogin)
         binding.cardFollowers.setOnClickListener {
             findNavController().navigate(
