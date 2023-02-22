@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import ru.binnyatoff.githubclient.data.network.NetworkResult
 import ru.binnyatoff.githubclient.repository.Repository
 import ru.binnyatoff.githubclient.repository.toUser
 import ru.binnyatoff.githubclient.screens.helpers.EventHandler
@@ -30,49 +33,56 @@ class HomeViewModel @Inject constructor(private val repository: Repository) :
 
     private fun reduce(event: HomeFragmentEvent, currentState: HomeFragmentState.Loading) {
         when (event) {
-            HomeFragmentEvent.HomeInit -> getRepository()
+            HomeFragmentEvent.HomeInit -> {
+                getRepository()
+            }
         }
     }
 
     private fun reduce(event: HomeFragmentEvent, currentState: HomeFragmentState.Loaded) {
         when (event) {
-            HomeFragmentEvent.ReloadScreen -> getRepository(true)
+            HomeFragmentEvent.ReloadScreen -> {
+                _homeViewState.postValue(HomeFragmentState.Loading)
+                getRepository()
+            }
         }
     }
 
     private fun reduce(event: HomeFragmentEvent, currentState: HomeFragmentState.Error) {
         when (event) {
-            HomeFragmentEvent.ReloadScreen -> getRepository(true)
+            HomeFragmentEvent.ReloadScreen -> {
+                _homeViewState.postValue(HomeFragmentState.Loading)
+                getRepository()
+            }
         }
     }
 
     private fun reduce(event: HomeFragmentEvent, currentState: HomeFragmentState.Empty) {
         when (event) {
-            HomeFragmentEvent.ReloadScreen -> getRepository(true)
+            HomeFragmentEvent.ReloadScreen -> {
+                _homeViewState.postValue(HomeFragmentState.Loading)
+                getRepository()
+            }
         }
     }
 
-    private fun getRepository(needsToRefresh: Boolean = false) {
-        if (needsToRefresh) {
-            _homeViewState.postValue(HomeFragmentState.Loading)
-        }
+    private fun getRepository() {
         viewModelScope.launch {
-            try {
-                val users = repository.getUsers()
-
-                if (users.isSuccessful) {
-                    val body = users.body()
-                    if (body != null) {
-                        val usersList = body.map { userNetwork ->
+            withContext(Dispatchers.IO) {
+                when (val response = repository.getUsersNew()) {
+                    is NetworkResult.Error -> {}
+                    is NetworkResult.Exception -> {}
+                    is NetworkResult.Success -> {
+                        val userList = response.data.map { userNetwork ->
                             userNetwork.toUser()
                         }
-                        _homeViewState.postValue(HomeFragmentState.Loaded(usersList))
-
-                    } else
-                        _homeViewState.postValue(HomeFragmentState.Empty)
+                        _homeViewState.postValue(
+                            HomeFragmentState.Loaded(
+                                userList = userList
+                            )
+                        )
+                    }
                 }
-            } catch (e: Exception) {
-                _homeViewState.postValue(HomeFragmentState.Error("$e"))
             }
         }
     }

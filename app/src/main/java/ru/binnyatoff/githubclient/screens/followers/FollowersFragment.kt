@@ -2,19 +2,13 @@ package ru.binnyatoff.githubclient.screens.followers
 
 import android.os.Bundle
 import android.view.*
-import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.repository.models.User
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.viewbinding.ViewBinding
-import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.binnyatoff.githubclient.R
 import ru.binnyatoff.githubclient.databinding.FragmentHomeBinding
 import ru.binnyatoff.githubclient.screens.adapter.Adapter
@@ -25,8 +19,18 @@ import ru.binnyatoff.githubclient.screens.adapter.ClickDelegate
 class FollowersFragment : SearchToList(R.layout.fragment_home) {
 
     private val followersViewModel: FollowersViewModel by viewModels()
-    private val binding: FragmentHomeBinding by viewBinding()
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private var adapter: Adapter? = getMyAdapter()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -91,8 +95,9 @@ class FollowersFragment : SearchToList(R.layout.fragment_home) {
         Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
+        super.onDestroyView()
         adapter = null
-        super.onDestroy()
+        _binding = null
     }
 }

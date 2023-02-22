@@ -9,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.repository.models.User
-import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.binnyatoff.githubclient.R
 import ru.binnyatoff.githubclient.databinding.FragmentHomeBinding
 import ru.binnyatoff.githubclient.screens.adapter.SearchToList
@@ -21,11 +20,22 @@ class HomeFragment : SearchToList(R.layout.fragment_home) {
 
     private var adapter: Adapter? = Adapter()
     private val viewModel by viewModels<HomeViewModel>()
-    private val binding: FragmentHomeBinding by viewBinding()
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true) //меню
+
         adapter?.attachDelegate(object : ClickDelegate {
             override fun onClick(currentUser: User) {
                 val bundle = bundleOf("currentUser" to currentUser.login)
@@ -54,9 +64,11 @@ class HomeFragment : SearchToList(R.layout.fragment_home) {
         }
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
+        super.onDestroyView()
         adapter = null
-        super.onDestroy()
+        _binding = null
+
     }
 
     private fun getState(state: HomeFragmentState) {

@@ -4,7 +4,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.binnyatoff.githubclient.repository.models.Search
+import ru.binnyatoff.githubclient.repository.models.SearchResult
 import ru.binnyatoff.githubclient.data.network.models.UserDetailsNetwork
 import ru.binnyatoff.githubclient.data.network.models.UserNetwork
 
@@ -19,5 +19,5 @@ interface Api {
     suspend fun get_user_details(@Path("user") user: String): Response<UserDetailsNetwork>
 
     @GET("/search/users")
-    suspend fun search(@Query("q")query: String): Response<Search>
+    suspend fun search(@Query("q")query: String): Response<SearchResult>
 }

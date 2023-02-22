@@ -1,6 +1,6 @@
 package ru.binnyatoff.githubclient.repository.models
 
-data class Search(
+data class SearchResult(
     val total_count: Int,
     val items: List<User>
 )

@@ -1,13 +1,14 @@
 package ru.binnyatoff.githubclient.screens.details
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import ru.binnyatoff.githubclient.R
@@ -18,7 +19,17 @@ import ru.binnyatoff.githubclient.repository.models.UserDetails
 class UserDetailsFragment : Fragment(R.layout.fragment_user_details) {
 
     private val userDetailsViewModel: UserDetailsViewModel by viewModels()
-    private val binding: FragmentUserDetailsBinding by viewBinding()
+    private var _binding: FragmentUserDetailsBinding? = null
+    private val binding get() =  _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentUserDetailsBinding.inflate(inflater,container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,6 +49,11 @@ class UserDetailsFragment : Fragment(R.layout.fragment_user_details) {
                 bundle
             )
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun getState(state: UserDetailsState) {
